@@ -4,16 +4,13 @@ Scripts voor de Samen Veerkrachtig Webflow site.
 
 ## Gebruik in Webflow
 
-### Project Settings → Before </head>
-```html
-<script src="https://cdn.jsdelivr.net/gh/Hubrand/samenveerkrachtig@main/sv_sitewide.js" defer></script>
-```
-
 ### Project Settings → Before </head> (sitewide — laadt op elke pagina)
 ```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/Hubrand/samenveerkrachtig@main/sv_sitewide.js" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/Hubrand/samenveerkrachtig@main/sv_autocomplete.js" defer></script>
 ```
+> De Supabase client moet vóór sv_sitewide.js geladen worden. Met `defer` worden scripts in volgorde uitgevoerd.
 > sv_autocomplete.js initialiseert zichzelf alleen als [data-sv="search-input"] aanwezig is op de pagina.
 
 ### Per pagina in Page Settings → Before </body>
