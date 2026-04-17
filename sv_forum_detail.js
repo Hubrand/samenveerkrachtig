@@ -365,7 +365,7 @@
 
   function sanitize(html) {
     if (!html) return ''
-    html = html.replace(/)<[^<]*)*<\/script>/gi, '')
+    html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     html = html.replace(/\s*on\w+="[^"]*"/gi, '')
     html = html.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
     html = html.replace(/<img[^>]*class="[^"]*graemlin[^"]*"[^>]*>/gi, '')
