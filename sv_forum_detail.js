@@ -208,23 +208,39 @@
     const container = document.querySelector('[data-sv="related-list"]')
     const template  = document.querySelector('[data-sv="related-template"]')
     if (!container || !template) return
-    if (!categoryId) { template.style.display = 'none'; return }
 
-    const { data: related } = await sv
-      .from('topics')
-      .select(`
-        id, title, created_at, reply_count, legacy_wp_slug,
-        author:profiles!author_id(display_name),
-        category:categories!category_id(name, slug)
-      `)
-      .eq('category_id', categoryId)
-      .neq('id', topicId)
-      .order('reply_count', { ascending: false })
-      .limit(4)
+    const select = `
+      id, title, created_at, reply_count, legacy_wp_slug,
+      author:profiles!author_id(display_name),
+      category:categories!category_id(name, slug)
+    `
+
+    let related = []
+    if (categoryId) {
+      const { data } = await sv
+        .from('topics')
+        .select(select)
+        .eq('category_id', categoryId)
+        .neq('id', topicId)
+        .order('reply_count', { ascending: false })
+        .limit(4)
+      related = data || []
+    }
+
+    // Fallback: geen berichten in deze categorie → meest recente topics uit alle categorieën
+    if (related.length === 0) {
+      const { data } = await sv
+        .from('topics')
+        .select(select)
+        .neq('id', topicId)
+        .order('created_at', { ascending: false })
+        .limit(4)
+      related = data || []
+    }
 
     template.style.display = 'none'
     container.innerHTML = ''
-    if (!related || related.length === 0) return
+    if (related.length === 0) return
 
     related.forEach(topic => {
       const card = template.cloneNode(true)
