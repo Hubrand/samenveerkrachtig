@@ -1,6 +1,6 @@
-<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
-<!-- Finsweet -->
-window.sv = window.supabase.createClient(
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  window.sv = window.supabase.createClient(
     'https://vavwwyelfyvijumgmemi.supabase.co',
     'sb_publishable_MAqf_d6Xo4nv4RR7JuOerw_vKXAvRi5'
   )
@@ -81,5 +81,4 @@ window.sv = window.supabase.createClient(
   } else {
     svInit()
   }
-<!-- Mapbox Resources -->
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.17.0/mapbox-gl.css" rel="stylesheet" />
+</script>
