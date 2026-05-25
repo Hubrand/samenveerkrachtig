@@ -43,8 +43,8 @@
       window.location.href = '/account/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search)
       return
     }
-    await loadCategories()
     initQuill()
+    await loadCategories()
     initForm(user)
   }
 
