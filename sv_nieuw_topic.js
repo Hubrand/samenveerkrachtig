@@ -43,7 +43,9 @@
       window.location.href = '/account/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search)
       return
     }
+    // ✅ Quill direct initialiseren — niet wachten op categorieën
     initQuill()
+    // Categorieën en form parallel
     await loadCategories()
     initForm(user)
   }
