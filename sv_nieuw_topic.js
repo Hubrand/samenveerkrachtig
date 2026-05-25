@@ -197,11 +197,13 @@
 
       // ✅ Automatisch abonneren als checkbox aangevinkt (standaard aan)
       var abonneer = !abonneerCheck || abonneerCheck.checked
-      if (abonneer) {
-        await sv.from('topic_subscriptions').insert({
-          topic_id: newTopic.id,
-          user_id:  user.id,
-        }).catch(function() {})
+     if (abonneer) {
+        try {
+          await sv.from('topic_subscriptions').insert({
+            topic_id: newTopic.id,
+            user_id:  user.id,
+          })
+        } catch (e) {}
       }
 
       // Doorsturen naar het nieuwe topic
