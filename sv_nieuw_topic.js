@@ -1,12 +1,12 @@
 // ============================================================
-// SAMEN VEERKRACHTIG — Nieuw bericht pagina v2
+// SAMEN VEERKRACHTIG — Nieuw bericht pagina v3
 // Plak dit in: Webflow → Page Settings → Before </body>
 //
 // WEBFLOW STRUCTUUR NODIG:
 //
 //   Tekst  [data-sv="nieuw-topic-categorie-naam"]   ← "Je start een bericht in: ..."
 //
-//   Form Block (Action: https://#, Method: GET)
+//   Form Block (Action: /forum, Method: GET)
 //     └── Form  [data-sv="nieuw-topic-form"]
 //           ├── Input (text)  [data-sv="topic-titel"]
 //           │
@@ -20,7 +20,7 @@
 //           ├── Div  [data-sv="topic-abonneer"]          ← checkbox wrapper
 //           │     └── Input (checkbox)  [data-sv="topic-abonneer-checkbox"]
 //           │
-//           ├── Button submit  "Bericht plaatsen"
+//           ├── Button  [data-sv="submit-topic"]  "Bericht plaatsen"
 //           ├── Div  [data-sv="topic-success"]           display:none
 //           └── Div  [data-sv="topic-error"]             display:none
 // ============================================================
@@ -127,19 +127,18 @@
 
   // ── FORM SUBMIT ───────────────────────────────────────────
   function initForm(user) {
-    var form      = document.querySelector('[data-sv="nieuw-topic-form"]')
     var successEl = document.querySelector('[data-sv="topic-success"]')
     var errorEl   = document.querySelector('[data-sv="topic-error"]')
-    if (!form) return
+    var btn       = document.querySelector('[data-sv="submit-topic"]')
+    if (!btn) return
 
-    form.addEventListener('submit', async function(e) {
+    btn.addEventListener('click', async function(e) {
       e.preventDefault()
       e.stopPropagation()
 
       var titelInput    = document.querySelector('[data-sv="topic-titel"]')
       var radioChecked  = document.querySelector('[data-sv="categorie-radio"]:checked')
       var abonneerCheck = document.querySelector('[data-sv="topic-abonneer-checkbox"]')
-      var btn           = form.querySelector('button[type="submit"]')
 
       var titel       = titelInput?.value.trim()
       var categorieId = radioChecked ? radioChecked.value : null
@@ -172,7 +171,8 @@
         }
       }
 
-      if (btn) { btn.disabled = true; btn.textContent = 'Plaatsen...' }
+      btn.disabled = true
+      btn.textContent = 'Plaatsen...'
       if (successEl) successEl.style.display = 'none'
       if (errorEl)   errorEl.style.display   = 'none'
 
@@ -189,7 +189,8 @@
         .single()
 
       if (topicError || !newTopic) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Bericht plaatsen' }
+        btn.disabled = false
+        btn.textContent = 'Bericht plaatsen'
         showMsg(errorEl, 'Er ging iets mis. Probeer het opnieuw.')
         return
       }
