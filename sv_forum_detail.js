@@ -1,10 +1,12 @@
 // ============================================================
-// SAMEN VEERKRACHTIG — Forum onderwerp detail v6
-// Wijzigingen: volg/ontvolg knop + notificatie bij nieuwe reply
+// SAMEN VEERKRACHTIG — Forum onderwerp detail v7
+// Wijziging t.o.v. v6: reply-submit via knop-klik i.p.v. form-submit
+//   (reply-form is een <div>, geen <form> — submit-event vuurt daar niet)
 //
 // EXTRA WEBFLOW ELEMENTEN (naast de bestaande):
 //   [data-sv="volg-knop"]       button/link — "Volg dit onderwerp"
 //   [data-sv="volg-label"]      tekst binnen de knop (optioneel)
+//   [data-sv="submit-reply"]    knop/link — "Plaats reactie"
 // ============================================================
 
 (function () {
@@ -80,6 +82,7 @@
     ])
 
     initQuill()
+    initReplyForm()
   }
 
   // ── ABONNEMENT STATUS ─────────────────────────────────────
@@ -289,15 +292,16 @@
   }
 
   // ── REPLY PLAATSEN ───────────────────────────────────────
-  const replyForm = document.querySelector('[data-sv="reply-form"]')
-  if (replyForm) {
-    replyForm.addEventListener('submit', async function (e) {
+  function initReplyForm() {
+    const btn = document.querySelector('[data-sv="submit-reply"]')
+    if (!btn) return
+
+    btn.addEventListener('click', async function (e) {
       e.preventDefault()
       e.stopPropagation()
       if (!currentTopicId || !window.svUser) return
 
       const errorEl = document.querySelector('[data-sv="reply-error"]')
-      const btn     = replyForm.querySelector('button[type="submit"]')
 
       let body = ''
       if (quillEditor) {
@@ -316,7 +320,9 @@
         }
       }
 
-      if (btn) { btn.disabled = true; btn.textContent = 'Plaatsen...' }
+      btn.disabled = true
+      const oudeTekst = btn.textContent
+      btn.textContent = 'Plaatsen...'
       if (errorEl) errorEl.style.display = 'none'
 
       const { data: newReply, error } = await sv.from('replies').insert({
@@ -325,7 +331,8 @@
         body
       }).select('id').single()
 
-      if (btn) { btn.disabled = false; btn.textContent = 'Reactie plaatsen' }
+      btn.disabled = false
+      btn.textContent = oudeTekst
 
       if (error) {
         if (errorEl) { errorEl.textContent = 'Er ging iets mis. Probeer het opnieuw.'; errorEl.style.display = '' }
@@ -364,6 +371,11 @@
   }
 
   // ── HELPERS ──────────────────────────────────────────────
+  function svFill(val, text) {
+    const el = document.querySelector('[data-sv="' + val + '"]')
+    if (el) el.textContent = text
+  }
+
   function fillEl(parent, val, text) {
     const el = parent.querySelector('[data-sv="' + val + '"]')
     if (el) el.textContent = text
