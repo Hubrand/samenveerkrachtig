@@ -83,6 +83,32 @@
 
     initQuill()
     initReplyForm()
+    initTopicDelete(topic.id)
+  }
+
+  // ── TOPIC VERWIJDEREN (alleen admin/moderator) ────────────
+  function initTopicDelete(topicId) {
+    const btn = document.querySelector('[data-sv="topic-delete"]')
+    if (!btn) return
+
+    const isAdmin = window.svProfile?.is_admin || window.svProfile?.is_moderator
+    if (!isAdmin) {
+      btn.style.display = 'none'
+      return
+    }
+
+    btn.style.display = ''
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault()
+      if (!confirm('Dit bericht en alle reacties verwijderen? Dit kan niet ongedaan worden gemaakt.')) return
+
+      const { error } = await sv.from('topics').delete().eq('id', topicId)
+      if (error) {
+        alert('Verwijderen mislukt. Probeer het opnieuw.')
+        return
+      }
+      window.location.href = '/forum'
+    })
   }
 
   // ── ABONNEMENT STATUS ─────────────────────────────────────
