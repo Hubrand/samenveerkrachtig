@@ -47,6 +47,14 @@ async function svInit() {
     svHide('admin-only')
   }
 
+  // ✅ Logout-knoppen binden (overal op de site)
+  document.querySelectorAll('[data-sv="logout"]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault()
+      svLogout()
+    })
+  })
+
   // ✅ Auth klaar — andere scripts kunnen nu veilig window.svUser lezen
   window.dispatchEvent(new Event('sv:auth-ready'))
 }
