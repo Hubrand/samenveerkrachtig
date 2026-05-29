@@ -32,7 +32,7 @@
 
   // ── EDGE FUNCTION WARM HOUDEN ─────────────────────────────
   setTimeout(function() {
-    fetch(CONFIG.edgeFunctionUrl + '?q=wia').catch(function(){})
+    fetch(CONFIG.edgeFunctionUrl + '?query=wia').catch(function(){})
   }, 1500)
 
   // ── FORM SUBMIT ONDERSCHEPPEN ─────────────────────────────
@@ -42,7 +42,7 @@
       e.preventDefault()
       e.stopPropagation()
       var val = input.value.trim()
-      if (val) window.location.href = CONFIG.resultsPageUrl + '?q=' + encodeURIComponent(val)
+      if (val) window.location.href = CONFIG.resultsPageUrl + '?queryuery=' + encodeURIComponent(val)
     }, true)
   }
 
@@ -147,7 +147,7 @@
       footer = footerTemplate.cloneNode(true)
       footer.removeAttribute('data-sv')
       footer.style.display = ''
-      footer.href = CONFIG.resultsPageUrl + '?q=' + encodeURIComponent(query)
+      footer.href = CONFIG.resultsPageUrl + '?query=' + encodeURIComponent(query)
       var footerText = footer.querySelector('[data-sv="footer-text"]')
       if (footerText) {
         footerText.textContent = 'Bekijk alle resultaten voor "' + query + '"'
@@ -156,7 +156,7 @@
       }
     } else {
       footer = document.createElement('a')
-      footer.href = CONFIG.resultsPageUrl + '?q=' + encodeURIComponent(query)
+      footer.href = CONFIG.resultsPageUrl + '?query=' + encodeURIComponent(query)
       footer.style.cssText = 'display:flex;align-items:center;justify-content:center;padding:11px 16px;font-size:14px;color:#031F3D;font-weight:600;text-decoration:none;border-top:1px solid #e0e7ef;background:#F9F7F6'
       footer.textContent = '→ Bekijk alle resultaten voor "' + query + '"'
     }
@@ -210,7 +210,7 @@
     if (cache['cms_' + query]) return cache['cms_' + query]
     try {
       var res = await fetch(
-        CONFIG.edgeFunctionUrl + '?q=' + encodeURIComponent(query) + '&limit=' + CONFIG.maxResultsPerSource
+        CONFIG.edgeFunctionUrl + '?query=' + encodeURIComponent(query) + '&limit=' + CONFIG.maxResultsPerSource
       )
       if (!res.ok) return []
       var data = await res.json()
